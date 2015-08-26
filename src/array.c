@@ -351,7 +351,8 @@ jl_array_t *jl_pchar_to_array(const char *str, size_t len)
 
 jl_value_t *jl_array_to_string(jl_array_t *a)
 {
-    // TODO: check type of array?
+    if (!(jl_typeis(a, jl_array_uint8_type) && jl_array_ndims(a) == 1))
+        jl_error("jl_array_to_string: argument not byte vector");
     jl_value_t *s = (jl_value_t*)jl_gc_alloc_1w();
     jl_set_typeof(s, jl_utf8_string_type);
     jl_set_nth_field(s, 0, (jl_value_t*)a);
