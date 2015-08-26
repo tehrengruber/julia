@@ -783,3 +783,13 @@ function Regex(pattern::AbstractString, options::Integer)
             "use string flags instead: Regex(\"$pattern\", \"$flags\").", :Regex)
     Regex(pattern, flags)
 end
+
+# 12807
+
+start(::Union(Process, ProcessChain)) = 1
+done(::Union(Process, ProcessChain), i::Int) = i == 3
+next(p::Union(Process, ProcessChain), i::Int) = (getindex(p, i), i+1)
+@noinline function getindex(p::Union(Process, ProcessChain), i::Int)
+    depwarn("open(cmd) now returns only a Process <: IO object", :getindex)
+    return i == 1 ? p.(p.openstream) : p
+end
