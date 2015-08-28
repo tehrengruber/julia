@@ -220,6 +220,12 @@ function givensAlgorithm{T<:AbstractFloat}(f::Complex{T}, g::Complex{T})
     return cs, sn, r
 end
 
+"""Computes a Givens rotation
+
+`givens{T}(f::T, g::T, i1::Integer, i2::Integer) -> (Givens{T}, r)`
+
+such that `G*x=y` with `x[i1]=f`, `x[i2]=g`, `y[i1]=r`, and `y[i2]=0`. The cosine and sine of the rotation angle can be extracted from the `Givens` type with `G.c` and `G.s` respectively. The arguments `f` and `g` can be either `Float32`, `Float64`, `Complex{Float32}`, or `Complex{Float64}`. The `Givens` type supports left multiplication `G*A` and conjugated transpose right multiplication `A*G'`. The type doesn't have a `size` and can therefore be multiplied with matrices of arbitrary size as long as `i2<=size(A,2)` for `G*A` or `i2<=Size(A,1)` for `A*G'`.
+"""
 function givens{T}(f::T, g::T, i1::Integer, i2::Integer)
     if i1 >= i2
         throw(ArgumentError("second index must be larger than the first"))
@@ -227,7 +233,12 @@ function givens{T}(f::T, g::T, i1::Integer, i2::Integer)
     c, s, r = givensAlgorithm(f, g)
     Givens(i1, i2, convert(T, c), convert(T, s)), r
 end
+"""Computes a Givens rotation
 
+`givens{T}(A::AbstractArray{T}, i1::Integer, i2::Integer, col::Integer) -> (Givens{T}, r)`
+
+such that `G*A[:,col]=y` with `y[i1]=r`, and `y[i2]=0`. The cosine and sine of the rotation angle can be extracted from the `Givens` type with `G.c` and `G.s` respectively. The arguments `f` and `g` can be either `Float32`, `Float64`, `Complex{Float32}`, or `Complex{Float64}`. The `Givens` type supports left multiplication `G*A` and conjugated transpose right multiplication `A*G'`. The type doesn't have a `size` and can therefore be multiplied with matrices of arbitrary size as long as `i2<=size(A,2)` for `G*A` or `i2<=Size(A,1)` for `A*G'`.
+"""
 function givens{T}(A::AbstractMatrix{T}, i1::Integer, i2::Integer, col::Integer)
     if i1 >= i2
         throw(ArgumentError("second index must be larger than the first"))
