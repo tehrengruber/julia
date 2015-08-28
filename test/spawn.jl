@@ -248,10 +248,10 @@ let bad = "bad\0name"
     @test_throws ArgumentError run(setenv(`echo hello`, "good"=>bad))
 end
 
-let out = Pipe()
+let out = Pipe(), echo = `$exename -f -e 'print(STDOUT, " 1\t", readall(STDIN))'`
     @test_throws ArgumentError write(out, "not open error")
-    open(`cat -n`, "w", out) do in1
-        open(`cat -n`, "w", out) do in2
+    open(echo, "w", out) do in1
+        open(echo, "w", out) do in2
             write(in1, 'h')
             write(in2, UInt8['w'])
             println(in1, "ello")
