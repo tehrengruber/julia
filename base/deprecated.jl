@@ -783,3 +783,6 @@ export FloatingPoint
             "use string flags instead: Regex(\"$pattern\", \"$flags\").", :Regex)
     Regex(pattern, flags)
 end
+
+# 12839
+const AsyncStream = IO
