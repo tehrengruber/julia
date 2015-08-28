@@ -266,20 +266,20 @@ let out = Pipe()
     @test isreadable(out)
     @test !iswritable(out)
     @test isopen(out)
+    @test nb_available(out) == 0
     @test endswith(readuntil(out, '1'), '1')
-    @test read(out, UInt8) == '\n'
+    @test read(out, UInt8) == '\t'
     c = UInt8[0]
     @test c == read!(out, c)
-    @test nb_availble(out) == 0
-    wait_readnb(out, 1)
-    @test nb_availble(out) > 0
+    Base.wait_readnb(out, 1)
+    @test nb_available(out) > 0
     ln1 = readline(out)
     ln2 = readline(out)
     desc = readall(out)
     @test !isreadable(out)
     @test !iswritable(out)
     @test !isopen(out)
-    @test nb_availble(out) == 0
+    @test nb_available(out) == 0
     @test c == ['w']
     @test lstrip(ln2) == "1\thello\n"
     @test ln1 == "orld\n"
