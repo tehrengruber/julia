@@ -3313,3 +3313,12 @@ typealias TupleType12967{T<:Tuple} Type{T}
 foo12967(x, ::TupleType12967) = 2
 @test foo12967(1, Int) == 1
 @test foo12967(1, Tuple{}) == 2
+
+# PR 11888
+immutable A11888{T}
+    a::NTuple{16,T}
+end
+
+typealias B11888{T} A11888{A11888{A11888{T}}}
+
+@test sizeof(B11888{B11888{Int64}}) == (1 << 24) * 8
