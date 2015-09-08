@@ -291,7 +291,7 @@ $(error Address Sanitizer only supported with clang. Try setting SANITIZE=0)
 endif
 CC = $(CROSS_COMPILE)gcc
 CXX = $(CROSS_COMPILE)g++
-JCFLAGS = -std=gnu99 -pipe $(fPIC) -fno-strict-aliasing -D_FILE_OFFSET_BITS=64
+JCFLAGS = -std=gnu11 -pipe $(fPIC) -fno-strict-aliasing -D_FILE_OFFSET_BITS=64
 JCPPFLAGS =
 JCXXFLAGS = -pipe $(fPIC) -fno-rtti
 DEBUGFLAGS = -O0 -ggdb3 -DJL_DEBUG_BUILD -fstack-protector-all
@@ -301,7 +301,7 @@ endif
 ifeq ($(USECLANG),1)
 CC = $(CROSS_COMPILE)clang
 CXX = $(CROSS_COMPILE)clang++
-JCFLAGS = -pipe $(fPIC) -fno-strict-aliasing -D_FILE_OFFSET_BITS=64
+JCFLAGS = -std=gnu11 -pipe $(fPIC) -fno-strict-aliasing -D_FILE_OFFSET_BITS=64
 JCPPFLAGS =
 JCXXFLAGS = -pipe $(fPIC) -fno-rtti
 DEBUGFLAGS = -O0 -g -DJL_DEBUG_BUILD -fstack-protector-all
@@ -678,7 +678,13 @@ ifeq ($(OS), Darwin)
   INSTALL_NAME_ID_DIR = @rpath/
   INSTALL_NAME_CMD = install_name_tool -id $(INSTALL_NAME_ID_DIR)
   INSTALL_NAME_CHANGE_CMD = install_name_tool -change
-ifeq ($(shell test `dsymutil -v | cut -d\- -f2 | cut -d. -f1` -gt 102 && echo yes), yes)
+  LLVM_MAJOR = $(shell echo $(LLVM_VER) | cut -d. -f1)
+  LLVM_MINOR = $(shell echo $(LLVM_VER) | cut -d. -f2)
+ifeq ($(LLVM_VER),svn)
+  DSYMUTIL = $(build_bindir)/llvm-dsymutil
+else ifeq ($(shell test (($(LLVM_MAJOR) -gt 4) -o (($(LLVM_MAJOR -eq 3) -a ($(LLVM_MINOR) -gt 7))))))
+  DSYMUTIL = $(build_bindir)/llvm-dsymutil
+else ifeq ($(shell test `dsymutil -v | cut -d\- -f2 | cut -d. -f1` -gt 102 && echo yes), yes)
   DSYMUTIL = dsymutil
 else
   DSYMUTIL = true -ignore
