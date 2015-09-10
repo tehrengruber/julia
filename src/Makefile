@@ -53,10 +53,6 @@ ifeq ($(JULIAGC),MARKSWEEP)
 SRCS += gc
 endif
 
-ifeq ($(USE_COPY_STACKS),1)
-JCFLAGS += -DCOPY_STACKS
-endif
-
 FLISP_EXECUTABLE_debug = $(BUILDDIR)/flisp/flisp-debug
 FLISP_EXECUTABLE_release = $(BUILDDIR)/flisp/flisp
 ifeq ($(OS),WINNT)
