@@ -550,13 +550,6 @@ Test two floating point numbers `a` and `b` for equality taking in account small
 """
 :(Test.@test_approx_eq)
 
-doc"""
-    with_handler(f, handler)
-
-Run the function `f` using the `handler` as the handler.
-"""
-Test.with_handler
-
 # Base.FFTW
 
 doc"""
