@@ -27,8 +27,7 @@ int __declspec(noinline)
 #else
 int __attribute__((noinline))
 #endif
-DLLEXPORT
-testUcharX(unsigned char x) {
+DLLEXPORT testUcharX(unsigned char x) {
     return xs[x];
 }
 
